@@ -49,7 +49,7 @@ class Pol_domain:
             val_b_len = get_num_len(temp_val)
         self.val = temp_val
         return Pol_domain(temp_val,self.pol)
-
+#获取数字二进制长度
 def get_num_len(num):
     num = int(num)
     i = 0
@@ -59,6 +59,19 @@ def get_num_len(num):
         i = i + 1
         num = num / 2
     return i
+#创建乘法表
+def create_mul_table(pol):
+    file_object = open('mul_table.txt', 'w')
+    pol_len = get_num_len(pol)
+    val_len = pol_len - 1
+    for i in range(2**val_len):
+        for j in range(2**val_len):
+            file_object.write(str((Pol_domain(i,pol) * Pol_domain(j,pol)).val))
+            if (j != 2**val_len-1):
+                file_object.write(",")
+        if(i != 2**val_len-1):
+            file_object.write("\n")
+            
 def main():
     file_object = open('test.txt', 'w+')
     i = 0
