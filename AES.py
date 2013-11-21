@@ -129,11 +129,13 @@ def mul_by_table():
     return
 #归约异或
 def reduce_xor(num):
-    result = 0
-    while(num > 0):
-        result = result ^ (num % 2)
-        num = num / 2    
-    return result
+    n = num
+    n = (n&0x55555555) + ((n>>1)&0x55555555)
+    n = (n&0x33333333) + ((n>>2)&0x33333333)
+    n = (n&0x0f0f0f0f) + ((n>>4)&0x0f0f0f0f)
+    n = (n&0x00ff00ff) + ((n>>8)&0x00ff00ff)
+    n = (n&0x0000ffff) + ((n>>16)&0x0000ffff)
+    return n % 2
 
 #测试一个线性方程
 #测试阶段
