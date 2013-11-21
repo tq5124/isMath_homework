@@ -127,4 +127,33 @@ def mul_by_table():
     print (endtime - starttime)
     output_file.close()
     return
+#归约异或
+def reduce_xor(num):
+    result = 0
+    while(num > 0):
+        result = result ^ (num % 2)
+        num = num / 2
+    return result
+#测试一个线性方程
+#测试阶段
+def test_one_fucntion(function,table = []):
+    all_s = 0
+    sucess = 0
+    for i in range(256):
+        for j in range(256):
+            if(reduce_xor((i * 256 + j) & function)):
+                sucess = sucess + 1
+            all_s = all_s + 1
+    return sucess * 1.0 / all_s
+    
+#线性方程偏差
+#测试阶段，只测试前8位，即对256*256循环即可
+def linear_deviation():
+    output_file = open('linear_deviation.txt', 'w')
+    i = 0
+    while (i < 2**16):
+        output_file.write(str(i) + " " + str(test_one_fucntion(i)) + '\n')
+        i = i + 1
+    output_file.close()
+    return 
     
