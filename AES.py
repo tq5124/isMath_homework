@@ -60,7 +60,7 @@ def get_num_len(num):
         num = num / 2
     return i
 #创建乘法表
-def create_mul_table(pol):
+def create_mul_table(pol = 283):
     file_object = open('mul_table.txt', 'w')
     pol_len = get_num_len(pol)
     val_len = pol_len - 1
@@ -73,6 +73,14 @@ def create_mul_table(pol):
             file_object.write("\n")
     file_object.close()
     return
+#读取乘法表
+def get_mul_table():
+    file_object = open('mul_table.txt', 'r')
+    data = file_object.read().split('\n')
+    for i in range(len(data)):
+        data[i] = data[i].split(',')
+    file_object.close()
+    return data
 #建立随机数表，方便不同方案测试相同数据
 def create_random_table(n = 100000,len = 8):
     file_object = open('random.txt', 'w')
@@ -84,10 +92,11 @@ def create_random_table(n = 100000,len = 8):
             file_object.write('\n')
     file_object.close()
     return
-    
-def main():
+#普通乘法方式    
+def mul_by_tradition():
     input_file = open('random.txt','r')
     all_data = input_file.read().split('\n')
+    input_file.close()
     output_file = open('test2.txt', 'w')
     starttime = time.clock()
     for i in all_data:
@@ -99,4 +108,23 @@ def main():
     output_file.write('用时：' + str(endtime - starttime))
     print (endtime - starttime)
     output_file.close()
+    return 
+#乘法表方式
+def mul_by_table():
+    input_file = open('random.txt','r')
+    all_data = input_file.read().split('\n')
     input_file.close()
+    table = get_mul_table()
+    output_file = open('test3.txt', 'w')
+    starttime = time.clock()
+    for i in all_data:
+        j = i.split(',')
+        a = string.atoi(j[0])
+        b = string.atoi(j[1])
+        output_file.write('a = ' + str(a) + ',' + 'b = ' + str(b) + ',' + 'a * b = ' + str(table[a][b]) +'\n')
+    endtime = time.clock()
+    output_file.write('用时：' + str(endtime - starttime))
+    print (endtime - starttime)
+    output_file.close()
+    return
+    
