@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/python
 
-import math,random
+import math,random,time,string
 
 class Pol_domain:
     #值
@@ -71,13 +71,32 @@ def create_mul_table(pol):
                 file_object.write(",")
         if(i != 2**val_len-1):
             file_object.write("\n")
-            
-def main():
-    file_object = open('test.txt', 'w+')
-    i = 0
-    while(i < 100000):
-        a = int (random.random() * 256)
-        b = int (random.random() * 256)
-        file_object.write("a = " + str(a) + "," + "b = " + str(b) + "," + "a * b = " + str((Pol_domain(a) * Pol_domain(b)).val) +"\n")
-        i = i + 1
     file_object.close()
+    return
+#建立随机数表，方便不同方案测试相同数据
+def create_random_table(n = 100000,len = 8):
+    file_object = open('random.txt', 'w')
+    i = 0
+    while(i < n):
+        file_object.write(str(int (random.random() * (2**len))) + "," + str(int (random.random() * (2**len))))
+        i = i + 1
+        if (i != n):
+            file_object.write('\n')
+    file_object.close()
+    return
+    
+def main():
+    input_file = open('random.txt','r')
+    all_data = input_file.read().split('\n')
+    output_file = open('test2.txt', 'w')
+    starttime = time.clock()
+    for i in all_data:
+        j = i.split(',')
+        a = string.atoi(j[0])
+        b = string.atoi(j[1])
+        output_file.write('a = ' + str(a) + ',' + 'b = ' + str(b) + ',' + 'a * b = ' + str((Pol_domain(a) * Pol_domain(b)).val) +'\n')
+    endtime = time.clock()
+    output_file.write('用时：' + str(endtime - starttime))
+    print (endtime - starttime)
+    output_file.close()
+    input_file.close()
