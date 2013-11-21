@@ -79,6 +79,8 @@ def get_mul_table():
     data = file_object.read().split('\n')
     for i in range(len(data)):
         data[i] = data[i].split(',')
+        for j in range(len(data[i])):
+            data[i][j] = string.atoi(data[i][j])
     file_object.close()
     return data
 #建立随机数表，方便不同方案测试相同数据
@@ -163,5 +165,47 @@ def linear_deviation():
     output_file.write('用时：' + str(endtime - starttime))
     print (endtime - starttime)
     output_file.close()
-    return 
-    
+    return
+
+#全局变量table
+m_table = get_mul_table()
+#线性方程运算
+def l_f(i,j,k,l):
+    y3 = m_table[2][i] ^ m_table[1][j] ^ m_table[1][k] ^ m_table[3][l]
+    y2 = m_table[3][i] ^ m_table[2][j] ^ m_table[1][k] ^ m_table[1][l]
+    y1 = m_table[1][i] ^ m_table[3][j] ^ m_table[2][k] ^ m_table[1][l]
+    y0 = m_table[1][i] ^ m_table[1][j] ^ m_table[3][k] ^ m_table[2][l]
+    return str(y3) + '.' + str(y2) + '.' + str(y1) + '.' + str(y0) + '\n'
+#主函数
+def main():
+    i_start = 0#int (random.random() * (2**8))
+    j_start = 0#int (random.random() * (2**8))
+    k_start = 0#int (random.random() * (2**8))
+    l_start = 0#int (random.random() * (2**8))   
+    n = 2 << 7
+    i_end = i_start + n
+    j_end = j_start + n
+    k_end = k_start + n
+    l_end = l_start + n
+
+    output_file = open('linear_deviation.txt', 'w')
+    starttime = time.clock()
+    i = i_start
+    while (i < i_end):
+        j = j_start
+        while (j < j_end):
+            k = k_start
+            while (k < k_end):
+                l = l_start
+                while (l < l_end):
+                    y = l_f(i,j,k,l)
+                    output_file.write(str(i) + '.' + str(j) + '.' + str(k) + '.' + str(l) + ',' + y)
+                    l = l +1
+                k = k + 1
+            j = j +1
+        i = i +1
+    endtime = time.clock()
+    #output_file.write('用时：' + str(endtime - starttime))
+    print (endtime - starttime)
+    output_file.close()
+    return
