@@ -144,7 +144,7 @@ def test_one_fucntion(function,table = []):
     sucess = 0
     for i in range(256):
         for j in range(256):
-            if(reduce_xor((i * 256 + j) & function)):
+            if(reduce_xor(((i << 8) + j) & function)):
                 sucess = sucess + 1
             all_s = all_s + 1
     return sucess * 1.0 / all_s
@@ -157,6 +157,7 @@ def linear_deviation():
     i = 0
     while (i < 2**16):
         output_file.write(str(i) + " " + str(test_one_fucntion(i)) + '\n')
+        output_file.write(str(time.clock() - starttime) + '\n')
         i = i + 1
     endtime = time.clock()
     output_file.write('用时：' + str(endtime - starttime))
