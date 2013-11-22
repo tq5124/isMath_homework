@@ -192,7 +192,7 @@ def cal_i_o_table(i_start):
     starttime = time.clock()
     i = i_start
     while (i < i_end):
-	output_file = open('./linear_deviation/' + str(i) + '.txt', 'w')
+        output_file = open('./linear_deviation/' + str(i) + '.txt', 'w')
         j = j_start
         while (j < j_end):
             k = k_start
