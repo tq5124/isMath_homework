@@ -169,14 +169,14 @@ def linear_deviation():
 
 #全局变量table
 m_table = get_mul_table()
-#线性方程运算
+#线性方程运算，y0表示高位，y3表示低位，i表示高位，l表示低位，y0=a0a1…a7，y1=…
 def l_f(i,j,k,l):
-    y3 = m_table[2][i] ^ m_table[1][j] ^ m_table[1][k] ^ m_table[3][l]
-    y2 = m_table[3][i] ^ m_table[2][j] ^ m_table[1][k] ^ m_table[1][l]
-    y1 = m_table[1][i] ^ m_table[3][j] ^ m_table[2][k] ^ m_table[1][l]
-    y0 = m_table[1][i] ^ m_table[1][j] ^ m_table[3][k] ^ m_table[2][l]
-    return str(y3) + '.' + str(y2) + '.' + str(y1) + '.' + str(y0) + '\n'
-#计算一组2^24输入对应的输出打一个包
+    y0 = m_table[2][i] ^ m_table[3][j] ^ m_table[1][k] ^ m_table[1][l]
+    y1 = m_table[1][i] ^ m_table[2][j] ^ m_table[3][k] ^ m_table[1][l]
+    y2 = m_table[1][i] ^ m_table[1][j] ^ m_table[2][k] ^ m_table[3][l]
+    y3 = m_table[3][i] ^ m_table[1][j] ^ m_table[1][k] ^ m_table[2][l]
+    return str(y0) + '.' + str(y1) + '.' + str(y2) + '.' + str(y3) + '\n'
+#计算一组2^24输入对应的输出打一个包，i=x0x1…x7,j=…
 def cal_i_o_table(i_start):
     #i_start = 0#int (random.random() * (2**8))
     j_start = 0#int (random.random() * (2**8))
@@ -216,5 +216,5 @@ def main():
     for i in range(256):
         cal_i_o_table(i)
     return
-if   __name__  ==  '__main__':
-    main()
+#if   __name__  ==  '__main__':
+    #main()
