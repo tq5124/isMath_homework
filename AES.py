@@ -210,10 +210,64 @@ def cal_i_o_table(i_start):
     endtime = time.clock()
     print (endtime - starttime)
     return
-
+#计算全部输入输出表
 def cal_all_i_o_table():
     for i in range(256):
         cal_i_o_table(i)
     return
-#if   __name__  ==  '__main__':
-    #main()
+#十进制数转二进制数组
+def d_to_b_arr(num):
+    result = []
+    while (num != 0):
+        result.append(num % 2)
+        num = num / 2
+    #result.reverse()
+    return result
+#计算基础的偏差值为0.5的选择，用于后续组合
+#待验证
+def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
+    pol_len = get_num_len(pol)
+    #多项式转为二进制数组表示
+    pol_b_array = d_to_b_arr(pol)
+    #pol_b_array.reverse()
+    input_num = pol_len * len(matrix)
+    temp_result = []
+    for i in range(len(matrix)):
+        temp = []
+        for j in range(len(matrix[i])):
+            b_array = d_to_b_arr(matrix[i][j])
+            b_arr_len = len(b_array)
+            for k in range(b_arr_len):
+                if(b_array[k] == 1):
+                    temp_temp = []
+                    for l in range(pol_len - 1):
+                        temp_temp.append((pol_len - 1) * j + l)
+                    for l in range(k):
+                        temp_temp.append(-1)
+                    #print temp_temp
+                    temp.append(temp_temp)
+        temp_result.append(temp)
+    final_result = []
+    for i in range(len(matrix)):
+        temp = temp_result[i]
+        for j in temp:
+            j.reverse()
+        for j in range(len(pol_b_array)):
+            if(pol_b_array[j] == 0):
+                temp_string_result_y = pol_len - 1 -j - 1 + (pol_len - 1) * i
+                temp_string_result_x = ''
+                for k in temp:
+                    if(k[j] != -1):
+                        temp_string_result_x = temp_string_result_x + str(k[j]) + ','
+                final_result.append([temp_string_result_y,temp_string_result_x[:-1]])
+    final_result.sort()
+    output_file = open('base_table.txt', 'w')
+    for i in range(len(final_result)):
+        output_file.write(str(final_result[i][0]) + ':' + final_result[i][1])
+        if(i != (len(final_result) - 1)):
+            output_file.write('\n')
+    output_file.close()
+    return final_result
+        
+if   __name__  ==  '__main__':
+    print get_base()
