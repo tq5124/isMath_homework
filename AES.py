@@ -175,7 +175,7 @@ def l_f(i,j,k,l):
     y1 = m_table[1][i] ^ m_table[2][j] ^ m_table[3][k] ^ m_table[1][l]
     y2 = m_table[1][i] ^ m_table[1][j] ^ m_table[2][k] ^ m_table[3][l]
     y3 = m_table[3][i] ^ m_table[1][j] ^ m_table[1][k] ^ m_table[2][l]
-    return str(y0) + '.' + str(y1) + '.' + str(y2) + '.' + str(y3) + '\n'
+    return str(y0) + '.' + str(y1) + '.' + str(y2) + '.' + str(y3)
 #计算一组2^24输入对应的输出打一个包，i=x0x1…x7,j=…
 def cal_i_o_table(i_start):
     #i_start = 0#int (random.random() * (2**8))
@@ -188,7 +188,6 @@ def cal_i_o_table(i_start):
     k_end = k_start + n
     l_end = l_start + n
 
-    #output_file = open('linear_deviation.txt', 'w')
     starttime = time.clock()
     i = i_start
     while (i < i_end):
@@ -201,18 +200,18 @@ def cal_i_o_table(i_start):
                 while (l < l_end):
                     y = l_f(i,j,k,l)
                     output_file.write(str(i) + '.' + str(j) + '.' + str(k) + '.' + str(l) + ',' + y)
+                    if(((i == (i_end - 1)) and (j == (j_end - 1)) and (k == (k_end - 1)) and (l == (l_end - 1))) != 1):
+                        output_file.write('\n')                    
                     l = l +1
                 k = k + 1
             j = j +1
         i = i +1
         output_file.close()
     endtime = time.clock()
-    #output_file.write('用时：' + str(endtime - starttime))
     print (endtime - starttime)
-    #output_file.close()
     return
 
-def main():
+def cal_all_i_o_table():
     for i in range(256):
         cal_i_o_table(i)
     return
