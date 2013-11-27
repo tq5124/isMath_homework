@@ -199,7 +199,7 @@ def cal_i_o_table(i_start):
                 l = l_start
                 while (l < l_end):
                     y = l_f(i,j,k,l)
-                    output_file.write(str(i) + '.' + str(j) + '.' + str(k) + '.' + str(l) + ',' + y)
+                    output_file.write(str(i) + '.' + str(j) + '.' + str(k) + '.' + str(l) + '.' + y)
                     if(((i == (i_end - 1)) and (j == (j_end - 1)) and (k == (k_end - 1)) and (l == (l_end - 1))) != 1):
                         output_file.write('\n')                    
                     l = l +1
@@ -223,7 +223,41 @@ def d_to_b_arr(num):
         num = num / 2
     #result.reverse()
     return result
+#将数字转为8位一组的字符串
+def n_t_8s(num):
+    n = num
+    temp_result = []
+    while(n > 0):
+        temp_result.append(n % 256)
+        n = n /256    
+    while(len(temp_result) < 4):
+        temp_result.append(0)
+    temp_result.reverse()    
+    final_result = ""
+    for i in temp_result:
+        final_result = final_result + str(i) + '.'
+    return final_result[:-1]
+#标准化base_table为IP形式
+def standardize_base_table(max_length = 32):
+    input_file = open('base_table.txt','r')
+    all_data = input_file.read().split('\n')
+    input_file.close()
+    output_file = open('base_table.txt','w')
+    for i in range(len(all_data)):
+        temp = all_data[i].split(':')
+        y = string.atoi(temp[0])
+        x = temp[1].split(',')
+        y_result = 1 << (max_length - 1 - y)
+        x_result = 0
+        for j in x:
+            x_result = x_result + (1 << (max_length - 1 - string.atoi(j)))
+        output_file.write(n_t_8s(x_result) + '.' + n_t_8s(y_result))
+        if(i != len(all_data)):
+            output_file.write('\n')
+    output_file.close()
+    return
 #计算基础的偏差值为0.5的选择，用于后续组合
+#目前只适用于matrix中各项小于等于3，待提高通用性
 #待验证
 def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
     pol_len = get_num_len(pol)
@@ -267,7 +301,7 @@ def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
         if(i != (len(final_result) - 1)):
             output_file.write('\n')
     output_file.close()
-    return final_result
-        
-if   __name__  ==  '__main__':
-    print get_base()
+    standardize_base_table()
+    return 
+#if   __name__  ==  '__main__':
+#    print get_base()
