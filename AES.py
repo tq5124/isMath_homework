@@ -139,31 +139,48 @@ def reduce_xor(num):
     n = (n&0x0000ffff) + ((n>>16)&0x0000ffff)
     return n % 2
 
-#测试一个线性方程
+#测试一个线性方程，一次测试所有base_table
 #测试阶段
-def test_one_function(function):
+def test_one_function_of_base_table():
     starttime = time.clock()
-    final_result = 0.0
+    input_file = open('base_table.txt', 'r')
+    file_data = input_file.read()
+    input_file.close()
+    base_data = file_data.split('\n')
+    del file_data
+    final_result = []
+    for m in range(len(base_data)):
+        final_result.append(0.0)
     for i in range(256):
-        result = 0
+        result = []
+        for m in range(len(base_data)):
+            result.append(0.0)
         input_file = open('linear_deviation/' + str(i) + '.txt', 'r')
         file_data = input_file.read()
         input_file.close()
         data = file_data.split('\n')
         del file_data
         for j in data:
-            temp_result = 0
             k = j.split('.')
-            for l in range(len(k)):
-                #print string.atoi(function[l])
-                #print string.atoi(k[l])
-                temp_result = temp_result ^ reduce_xor(string.atoi(function[l]) & string.atoi(k[l]))
-            if(temp_result == 0):
-                result = result + 1
+            for m in range(len(base_data)):
+                function = base_data[m].split('.')
+                temp_result = 0
+                for l in range(len(k)):
+                    #print string.atoi(function[l])
+                    #print string.atoi(k[l])
+                    temp_result = temp_result ^ reduce_xor(string.atoi(function[l]) & string.atoi(k[l]))
+                if(temp_result == 0):
+                    result[m] = result[m] + 1
         del data
-        final_result = final_result + result *1.0 / (2 ** 24) / 256
-    #print (time.clock() - starttime)
+        for m in range(len(base_data)):
+            final_result[m] = final_result[m] + result[m] *1.0 / (2 ** 24) / 256
+    output_file = open('result.txt', 'w')
+    for m in range(len(final_result)):
+        output_file.write(str(final_result[m]) + '\n')
+    output_file.close()
+    print (time.clock() - starttime)
     return final_result
+'''
 #测试base_table的线性方程
 def test_base_function():
     input_file = open('base_table.txt', 'r')
@@ -179,7 +196,8 @@ def test_base_function():
         output_file.write(':')
         output_file.write(str(time.clock() - starttime))
         output_file.close()
-    return    
+    return
+'''
 '''
 #线性方程偏差
 #测试阶段，只测试前8位，即对256*256循环即可
