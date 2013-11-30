@@ -141,18 +141,49 @@ def reduce_xor(num):
 
 #测试一个线性方程
 #测试阶段
-def test_one_fucntion(function,table = []):
-    all_s = 0
-    sucess = 0
+def test_one_function(function):
+    starttime = time.clock()
+    final_result = 0.0
     for i in range(256):
-        for j in range(256):
-            if(reduce_xor(((i << 8) + j) & function)):
-                sucess = sucess + 1
-            all_s = all_s + 1
-    return sucess * 1.0 / all_s
-    
+        result = 0
+        input_file = open('linear_deviation/' + str(i) + '.txt', 'r')
+        file_data = input_file.read()
+        input_file.close()
+        data = file_data.split('\n')
+        del file_data
+        for j in data:
+            temp_result = 0
+            k = j.split('.')
+            for l in range(len(k)):
+                #print string.atoi(function[l])
+                #print string.atoi(k[l])
+                temp_result = temp_result ^ reduce_xor(string.atoi(function[l]) & string.atoi(k[l]))
+            if(temp_result == 0):
+                result = result + 1
+        del data
+        final_result = final_result + result *1.0 / (2 ** 24) / 256
+    #print (time.clock() - starttime)
+    return final_result
+#测试base_table的线性方程
+def test_base_function():
+    input_file = open('base_table.txt', 'r')
+    file_data = input_file.read()
+    input_file.close()
+    data = file_data.split('\n')
+    for i in data:
+        j = i.split('.')
+        starttime = time.clock()
+        result = test_one_function(j)
+        output_file = open('result.txt', 'w+')
+        output_file.write(str(result))
+        output_file.write(':')
+        output_file.write(str(time.clock() - starttime))
+        output_file.close()
+    return    
+'''
 #线性方程偏差
 #测试阶段，只测试前8位，即对256*256循环即可
+
 def linear_deviation():
     output_file = open('linear_deviation.txt', 'w')
     starttime = time.clock()
@@ -166,7 +197,7 @@ def linear_deviation():
     print (endtime - starttime)
     output_file.close()
     return
-
+'''
 #全局变量table
 m_table = get_mul_table()
 #线性方程运算，y0表示高位，y3表示低位，i表示高位，l表示低位，y0=a0a1…a7，y1=…
@@ -252,7 +283,7 @@ def standardize_base_table(max_length = 32):
         for j in x:
             x_result = x_result + (1 << (max_length - 1 - string.atoi(j)))
         output_file.write(n_t_8s(x_result) + '.' + n_t_8s(y_result))
-        if(i != len(all_data)):
+        if(i != len(all_data) - 1):
             output_file.write('\n')
     output_file.close()
     return
