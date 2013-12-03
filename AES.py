@@ -334,10 +334,21 @@ def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
     final_result = []
     for i in range(len(matrix)):
         temp = temp_result[i]
+        max_len = 0
         for j in temp:
             j.reverse()
-        for j in range(len(pol_b_array)):
-            if(pol_b_array[j] == 0):
+            max_len = (max_len < len(j)) and len(j) or max_len
+        #print max_len
+        pol_b_array_array =  [pol_b_array]
+        for j in range(max_len - len(pol_b_array)):
+            pol_b_array_array.append(d_to_b_arr(pol << (j + 1)))
+        #print pol_b_array_array
+        for j in range(len(pol_b_array) - 1):
+            flag = 0
+            for m in pol_b_array_array:
+                if(m[j] == 1):
+                    flag = 1
+            if(flag == 0):
                 temp_string_result_y = pol_len - 1 -j - 1 + (pol_len - 1) * i
                 temp_string_result_x = ''
                 for k in temp:
@@ -345,6 +356,7 @@ def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
                         temp_string_result_x = temp_string_result_x + str(k[j]) + ','
                 final_result.append([temp_string_result_y,temp_string_result_x[:-1]])
     final_result.sort()
+    #print final_result
     output_file = open('base_table.txt', 'w')
     for i in range(len(final_result)):
         output_file.write(str(final_result[i][0]) + ':' + final_result[i][1])
@@ -355,3 +367,4 @@ def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
     return 
 #if   __name__  ==  '__main__':
 #    print get_base()
+get_base()
