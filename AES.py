@@ -367,4 +367,3 @@ def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
     return 
 #if   __name__  ==  '__main__':
 #    print get_base()
-get_base()
