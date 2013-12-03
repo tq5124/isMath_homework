@@ -148,6 +148,7 @@ def test_one_function_of_base_table():
     input_file.close()
     base_data = file_data.split('\n')
     del file_data
+    base_data = [ x for x in base_data if x != '' ]
     final_result = []
     for m in range(len(base_data)):
         final_result.append(0.0)
