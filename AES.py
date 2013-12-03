@@ -301,7 +301,7 @@ def standardize_base_table(max_length = 32):
         for j in x:
             x_result = x_result + (1 << (max_length - 1 - string.atoi(j)))
         output_file.write(n_t_8s(x_result) + '.' + n_t_8s(y_result))
-        if(i != len(all_data) - 1):
+        if(i != (len(all_data) - 1)):
             output_file.write('\n')
     output_file.close()
     return
