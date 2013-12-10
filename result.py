@@ -1,6 +1,7 @@
 import sys
 import string
 import os
+import time
 
 f = open("base_table.txt")
 line = f.readline()
@@ -76,6 +77,7 @@ while index < upper:
 print "base written done!"
 output.close()
 
+starttime = time.time()
 basef = open("base_no_repeat.txt","w")
 basef.close()
 base_index = 0
@@ -89,7 +91,7 @@ while(1):
         base_index += 1
     else:
         break
-
+print time.time() - starttime
 print "base no repeat done!"
    
 #output.write(str(index)+":\t"+todecimal(tmp)+"\n")
