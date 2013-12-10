@@ -368,12 +368,21 @@ def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
 #if   __name__  ==  '__main__':
 #    print get_base()
 
+def test_mul(mul=100000):
+    t = time.time()
+    for i in range(mul):
+        a = Pol_domain(random.randint(0, 255))
+        b = Pol_domain(random.randint(0, 255))
+        c = a * b
+    return time.time() - t
+
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--test", help="call function test_one_function_of_base_table()", action="store_true")
 args = parser.parse_args()
 if args.test:
     print "running function test_one_function_of_base_table()"
-    test_one_function_of_base_table()
+    # test_one_function_of_base_table()
+    print test_mul()
 else:
     print "arguments require, see options in --help"
