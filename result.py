@@ -1,8 +1,11 @@
 import sys
 import string
+import os
+
 f = open("base_table.txt")
 line = f.readline()
 matrix = []
+base_scale = 0
 while line:
     strarr = line.splitlines(0)[0].split('.')
     numarr = 0
@@ -10,6 +13,7 @@ while line:
         numarr <<= 8
         numarr |= (int)(string.atoi(i))
     matrix.append(numarr)
+    base_scale += 1
     line = f.readline()
 f.close()
 
@@ -25,8 +29,7 @@ def todecimal(i):
     return res
 
 def rtobinaryarr(i):
-    #i %= 256
-    res = [0] * 16
+    res = [0] * base_scale
     j = 0
     while i!=0:
         if( i & 1 ):
@@ -36,17 +39,58 @@ def rtobinaryarr(i):
     res.reverse()
     return res
 
-output = open('result.txt', 'w')
+def remove_repeat(base):
+    f = open("temp_1.txt","r")
+    fn = open("temp_2.txt","w")
+    baseresf = open("base_no_repeat.txt","a")
+    baseresf.write(base)
+    baseresf.close()
+    
+    line = f.readline()
+    while line:
+        if(line!=base):
+            fn.write(line)
+        line = f.readline()
+        
+    f.close()
+    fn.close()
+        
+    os.rename('temp_1.txt','temp.txt')
+    os.rename('temp_2.txt','temp_1.txt')
+    os.remove('temp.txt')
+
+#write base
+output = open('temp_1.txt', 'w')
 index = 1
-while index < 65536:
+upper = 2**base_scale
+while index < upper:
     todo = rtobinaryarr(index)
     tmp = 0
     l = 0
-    while l < 16:
+    while l < base_scale:
         if(todo[l]):
             tmp ^= matrix[l]
         l += 1
-    output.write(str(index)+":\t"+todecimal(tmp)+"\n")
+    output.write(str(tmp)+"\n")
     index += 1;
-print "done!"
+print "base written done!"
 output.close()
+
+basef = open("base_no_repeat.txt","w")
+basef.close()
+base_index = 0
+while(1):
+    f = open("temp_1.txt","r")
+    base = f.readline()
+    f.close();
+    if(base):
+        print base_index
+        remove_repeat(base)
+        base_index += 1
+    else:
+        break
+
+print "base no repeat done!"
+   
+#output.write(str(index)+":\t"+todecimal(tmp)+"\n")
+
