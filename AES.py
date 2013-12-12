@@ -310,6 +310,10 @@ def standardize_base_table(max_length = 32):
 #目前只适用于matrix中各项小于等于3，待提高通用性
 #待验证
 def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
+    #标记矩阵的一行元素是否都小于等于3,0表示都小于等于3
+    matrix_flag = []
+    for i in range(len(matrix)):
+        matrix_flag.append(0)
     pol_len = get_num_len(pol)
     #多项式转为二进制数组表示
     pol_b_array = d_to_b_arr(pol)
@@ -319,6 +323,8 @@ def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
     for i in range(len(matrix)):
         temp = []
         for j in range(len(matrix[i])):
+            if(matrix[i][j] > 3):
+                matrix_flag[i] = 1
             b_array = d_to_b_arr(matrix[i][j])
             b_arr_len = len(b_array)
             for k in range(b_arr_len):
@@ -332,6 +338,7 @@ def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
                     temp.append(temp_temp)
         temp_result.append(temp)
     final_result = []
+    #print matrix_flag
     for i in range(len(matrix)):
         temp = temp_result[i]
         max_len = 0
@@ -348,12 +355,25 @@ def get_base(matrix = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]],pol = 283):
             for m in pol_b_array_array:
                 if(m[j] == 1):
                     flag = 1
+            #print "j = %d,flag = %d" % (j,flag)
             if(flag == 0):
                 temp_string_result_y = pol_len - 1 -j - 1 + (pol_len - 1) * i
                 temp_string_result_x = ''
                 for k in temp:
                     if(k[j] != -1):
                         temp_string_result_x = temp_string_result_x + str(k[j]) + ','
+                final_result.append([temp_string_result_y,temp_string_result_x[:-1]])
+            #如果矩阵每个元素都小于等于3，则对于不可约多项式为1处的列仍能找到概率为1.0的线性方程
+            elif(flag == 1 and matrix_flag[i] == 0):
+                temp_string_result_y = pol_len - 1 -j - 1 + (pol_len - 1) * i
+                temp_string_result_x = ''
+                for k in temp:
+                    #print k
+                    if(k[j] != -1):
+                        temp_string_result_x = temp_string_result_x + str(k[j]) + ','
+                    if(len(k) == pol_len):
+                        temp_string_result_x = temp_string_result_x + str(k[pol_len - 1]) + ','
+                        #print temp_string_result_x
                 final_result.append([temp_string_result_y,temp_string_result_x[:-1]])
     final_result.sort()
     #print final_result
