@@ -181,42 +181,46 @@ def test_one_function_of_base_table():
     output_file.close()
     print (time.clock() - starttime)
     return final_result
-'''
-#测试base_table的线性方程
-def test_base_function():
+
+#直接计算方法测试所有base_table
+#测试阶段
+def direct_test_base_table():
+    starttime = time.clock()
     input_file = open('base_table.txt', 'r')
     file_data = input_file.read()
     input_file.close()
-    data = file_data.split('\n')
-    for i in data:
-        j = i.split('.')
-        starttime = time.clock()
-        result = test_one_function(j)
-        output_file = open('result.txt', 'w+')
-        output_file.write(str(result))
-        output_file.write(':')
-        output_file.write(str(time.clock() - starttime))
-        output_file.close()
-    return
-'''
-'''
-#线性方程偏差
-#测试阶段，只测试前8位，即对256*256循环即可
+    base_data = file_data.split('\n')
+    del file_data
+    base_data = [ x for x in base_data if x != '' ]
+    final_result = []
+    for m in range(len(base_data)):
+        final_result.append(0.0)
+        base_data[m] = base_data[m].split('.')
+        for n in range(len(base_data[m])):
+            base_data[m][n] = string.atoi(base_data[m][n])
+    #print base_data
+    for i in range(256):
+        for j in range(256):
+            for k in range(256):
+                for l in range(256):
+                    data = []
+                    data.append(i)
+                    data.append(j)
+                    data.append(k)
+                    data.append(l)
+                    data.append(m_table[2][i] ^ m_table[3][j] ^ m_table[1][k] ^ m_table[1][l])
+                    data.append(m_table[1][i] ^ m_table[2][j] ^ m_table[3][k] ^ m_table[1][l])
+                    data.append(m_table[1][i] ^ m_table[1][j] ^ m_table[2][k] ^ m_table[3][l])
+                    data.append(m_table[3][i] ^ m_table[1][j] ^ m_table[1][k] ^ m_table[2][l])
+                    for m in range(len(base_data)):
+                        temp_result = 0
+                        for n in range(len(base_data[0])):
+                            temp_result = temp_result ^ reduce_xor(base_data[m][n] & data[n])
+                        if(temp_result == 0):
+                            final_result[m] = final_result[m] + 1.0 / (2 ** 24) / 256
+    print (time.clock() - starttime)
+    return final_result
 
-def linear_deviation():
-    output_file = open('linear_deviation.txt', 'w')
-    starttime = time.clock()
-    i = 0
-    while (i < 2**16):
-        output_file.write(str(i) + " " + str(test_one_fucntion(i)) + '\n')
-        output_file.write(str(time.clock() - starttime) + '\n')
-        i = i + 1
-    endtime = time.clock()
-    output_file.write('用时：' + str(endtime - starttime))
-    print (endtime - starttime)
-    output_file.close()
-    return
-'''
 #全局变量table
 m_table = get_mul_table()
 #线性方程运算，y0表示高位，y3表示低位，i表示高位，l表示低位，y0=a0a1…a7，y1=…
